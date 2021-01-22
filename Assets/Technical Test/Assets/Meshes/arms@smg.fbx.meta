@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 78bb122e01a3fae468b5e493628e5bc9
 ModelImporter:
-  serializedVersion: 25
+  serializedVersion: 26
   internalIDToNameTable:
   - first:
       1: 100000
@@ -500,17 +500,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: No Name
-    second: {fileID: 2100000, guid: 566c4623ff686a847b9212754376cb95, type: 2}
+    second: {fileID: 2100000, guid: ef99d41bd1187694fba0094078093717, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: scope1
-    second: {fileID: 2100000, guid: 9cc9863777e8c11439ccf5f84d8cd92b, type: 2}
+    second: {fileID: 2100000, guid: dc312b08cc897b14ab2f82c007b1fc2d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: smg
-    second: {fileID: 2100000, guid: dbbfd6c4bd2c0dc4c88f7fbc0c038a21, type: 2}
+    second: {fileID: 2100000, guid: edba13a117a308c4bb1231309f9369c8, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -550,7 +550,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -719,7 +719,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.9950413
+        functionName: Reloaded
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -1187,6 +1194,7 @@ ModelImporter:
     meshCompression: 3
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 0
     importBlendShapes: 0
     importCameras: 0
