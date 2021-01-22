@@ -6,13 +6,10 @@ public class Target : MonoBehaviour
 {
 	[SerializeField] private float _health;
 
-	public void GotHit(float dmg)
+	public float Health
 	{
-		Debug.Log("OUCH");
-		_health -= dmg;
-		
-		if(_health <= 0)
-			Destroy(gameObject);
+		get => _health;
+		set => _health = value;
 	}
 
 	private void OnDestroy()

@@ -8,6 +8,7 @@ public class CharacterController : MonoBehaviour
 	[SerializeField] private AnimationController _animationController;
 	[SerializeField] private Transform _player;
 	[SerializeField] private Transform _camera;
+	[SerializeField] private LayerMask _layermask;
 
 	[SerializeField] private float _mSensitivity = 10f;
 	[SerializeField] private float _dmg;
@@ -76,11 +77,12 @@ public class CharacterController : MonoBehaviour
 
 		_animationController.Fire();
 		RaycastHit hit;
-		if (Physics.Raycast(_camera.position, _camera.forward, out hit, _range))
+		if (Physics.Raycast(_camera.position, _camera.forward, out hit, _range, _layermask))
 		{
+			Debug.Log(hit.transform.name);
 			if (hit.transform.CompareTag("Target"))
 			{
-				
+				hit.transform.GetComponent<TargetPoint>().Hit(_dmg);
 			}
 		}
 
