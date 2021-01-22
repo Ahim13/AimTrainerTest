@@ -1,0 +1,13 @@
+{
+  "weaponParameters": {
+    "rateOfFire": 600,
+    "clipSize": 30,
+    "damage": 50
+  },
+  "gameParameters": {
+    "targetsToKill": 30
+  },
+  "targetParameters": {
+    "health": 150
+  }
+}
