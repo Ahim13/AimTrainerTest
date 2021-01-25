@@ -6,47 +6,41 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	[SerializeField] private AnimationController _animationController;
+	[SerializeField] private Statistics _statistics;
 	[SerializeField] private Transform _player;
 	[SerializeField] private Transform _camera;
 	[SerializeField] private LayerMask _layermask;
 
 	[SerializeField] private float _mSensitivity = 10f;
 	[SerializeField] private float _range;
-	
-	[SerializeField] private float _dmg;
-	[SerializeField] private float _fireRate;
-	[SerializeField] private float _clipSize;
 
-	private float _allShots = 0;
-	private float _critricalShots = 0;
-	private float _normalShots = 0;
-	
 	private float _xRotation;
 	private float _timeToFire;
-	private float _currentClip;
 	private bool _isLoaded;
-
-	public float CurrentClip => _currentClip;
-	public float Accracy => (_normalShots + _critricalShots) / _allShots;
-	public float CriticalAccuracy => _critricalShots / _allShots;
+	
 
 	private void Awake()
 	{
 		_isLoaded = true;
 	}
 
-	public void SetUp(float fireRate, float clipSize, float damage)
+	private void Start()
 	{
-		_fireRate = fireRate;
-		_clipSize = clipSize;
-		_dmg = damage;
-		_dmg /= _fireRate / 60f;
-		_currentClip = _clipSize;
+		_statistics.CurrentClip = _statistics.ClipSize;
+		ResetStats();
+	}
+
+	private void ResetStats()
+	{
+		_statistics.Score = 0;
+		_statistics.AllShots = 0;
+		_statistics.CritricalShots = 0;
+		_statistics.NormalShots = 0;
 	}
 
 	void Update()
 	{
-		if (!GameManager.GameStarted)
+		if (!_statistics.GameStarted)
 			return;
 
 		CameraMovement();
@@ -75,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
 			while (_timeToFire <= Time.time)
 			{
-				_timeToFire += 60f / _fireRate;
+				_timeToFire += 60f / _statistics.FireRate;
 				Shoot();
 			}
 		}
@@ -85,28 +79,28 @@ public class PlayerController : MonoBehaviour
 	{
 		_animationController.Fire();
 		RaycastHit hit;
-		++_allShots;
+		++_statistics.AllShots;
 		if (Physics.Raycast(_camera.position, _camera.forward, out hit, _range, _layermask))
 		{
 			if (hit.transform.CompareTag("Target"))
 			{
 				var targetPoint = hit.transform.GetComponent<TargetPoint>();
-				targetPoint.Hit(_dmg);
+				targetPoint.Hit(_statistics.Dmg);
 				if (targetPoint.Type == TargetPointType.Normal)
 				{
-					++_normalShots;
-					GameManager.Instance.Score += 20;
+					++_statistics.NormalShots;
+					_statistics.Score += 20;
 				}
 				else if (targetPoint.Type == TargetPointType.Critical)
 				{
-					++_critricalShots;
-					GameManager.Instance.Score += 40;
+					++_statistics.CritricalShots;
+					_statistics.Score += 40;
 				}
 			}
 		}
 
-		_currentClip = CurrentClip - 1;
-		if (CurrentClip == 0)
+		_statistics.CurrentClip = _statistics.CurrentClip - 1;
+		if (_statistics.CurrentClip == 0)
 		{
 			_isLoaded = false;
 			_animationController.Reload();
@@ -127,7 +121,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Reloaded()
 	{
-		_currentClip = _clipSize;
+		_statistics.CurrentClip = _statistics.ClipSize;
 		_timeToFire = Time.time;
 		_isLoaded = true;
 	}

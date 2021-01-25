@@ -9,26 +9,15 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour
 {
 	public static GameManager Instance;
-	public static bool GameStarted = false;
 
 	[SerializeField] private GameObject _targetPrefab;
 	[SerializeField] private PlayerController _player;
+	[SerializeField] private Statistics _statistics;
 	[SerializeField] private AnimationController _animationController;
 
 	[Header("Debug")] [SerializeField] private float _maxDistanceToEnemies;
-
-	private int _initialTargetsToKill = 2;
-	private int _targetsToKill = 2;
-	private int _score;
+	
 	private Parameters parameters;
-
-	public int TargetsToKill => _targetsToKill;
-	public int InitialTargetsToKill => _initialTargetsToKill;
-	public int Score
-	{
-		get => _score;
-		set { _score = value; }
-	}
 
 	public PlayerController Player => _player;
 
@@ -38,7 +27,7 @@ public class GameManager : MonoBehaviour
 			Destroy(this.gameObject);
 		else
 			Instance = this;
-		GameStarted = false;
+		_statistics.GameStarted = false;
 		Cursor.lockState = CursorLockMode.None;
 
 		LoadParameters();
@@ -48,33 +37,36 @@ public class GameManager : MonoBehaviour
 	{
 		string json = File.ReadAllText(Application.dataPath + "/Technical Test/Example Data/ExampleParameters.json"); // would be better as a field or dynamic parameter
 		parameters = JsonUtility.FromJson<Parameters>(json);
-		Setup();
-		_player.SetUp(parameters.WeaponParameters.rateOfFire, parameters.WeaponParameters.clipSize, parameters.WeaponParameters.damage);
+		_statistics.InitialTargetsToKill = parameters.GameParameters.targetsToKill;
+		_statistics.TargetsToKill = parameters.GameParameters.targetsToKill;
+		_statistics.FireRate = parameters.WeaponParameters.rateOfFire;
+		_statistics.ClipSize = parameters.WeaponParameters.damage;
+		_statistics.Dmg = parameters.WeaponParameters.damage;
+		_statistics.Dmg /= _statistics.FireRate / 60f;
 	}
 
 	public void Setup()
 	{
-		_initialTargetsToKill = parameters.GameParameters.targetsToKill;
-		_targetsToKill = _initialTargetsToKill;
+
 	}
 
 	public void TargetKilled()
 	{
-		_targetsToKill = TargetsToKill - 1;
+		--_statistics.TargetsToKill;
 	}
 
 	public void StartGame()
 	{
 		StartCoroutine(TargetSpawning());
 		Cursor.lockState = CursorLockMode.Locked;
-		GameStarted = true;
+		_statistics.GameStarted = true;
 		_animationController.enabled = true;
 	}
 
 	private IEnumerator TargetSpawning()
 	{
 		GameObject target = null;
-		while (_targetsToKill > 0)
+		while (_statistics.TargetsToKill > 0)
 		{
 			if (target == null)
 			{
@@ -95,7 +87,7 @@ public class GameManager : MonoBehaviour
 	{
 
 		File.WriteAllText(Application.dataPath + "/Technical Test/Example Data/PlayerStatistics.json", 
-			JsonUtility.ToJson(new Stats(new PlayerStatistics(_score, Player.Accracy, Player.CriticalAccuracy)))); // would be better as a field or dynamic parameter
+			JsonUtility.ToJson(new Stats(new PlayerStatistics(_statistics.Score, _statistics.Accuracy, _statistics.CriticalAccuracy)))); // would be better as a field or dynamic parameter
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 
