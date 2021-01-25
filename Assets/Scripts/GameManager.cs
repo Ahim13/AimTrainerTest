@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField] private GameObject _targetPrefab;
 	[SerializeField] private PlayerController _player;
+	[SerializeField] private AnimationController _animationController;
 
 	[Header("Debug")] [SerializeField] private float _maxDistanceToEnemies;
 
@@ -23,7 +24,11 @@ public class GameManager : MonoBehaviour
 
 	public int TargetsToKill => _targetsToKill;
 	public int InitialTargetsToKill => _initialTargetsToKill;
-	public int Score => _score;
+	public int Score
+	{
+		get => _score;
+		set { _score = value; }
+	}
 
 	public PlayerController Player => _player;
 
@@ -33,13 +38,15 @@ public class GameManager : MonoBehaviour
 			Destroy(this.gameObject);
 		else
 			Instance = this;
+		GameStarted = false;
+		Cursor.lockState = CursorLockMode.None;
 
 		LoadParameters();
 	}
 
 	private void LoadParameters()
 	{
-		string json = File.ReadAllText(Application.dataPath + "/Technical Test/Example Data/ExampleParameters.json");
+		string json = File.ReadAllText(Application.dataPath + "/Technical Test/Example Data/ExampleParameters.json"); // would be better as a field or dynamic parameter
 		parameters = JsonUtility.FromJson<Parameters>(json);
 		Setup();
 		_player.SetUp(parameters.WeaponParameters.rateOfFire, parameters.WeaponParameters.clipSize, parameters.WeaponParameters.damage);
@@ -54,7 +61,6 @@ public class GameManager : MonoBehaviour
 	public void TargetKilled()
 	{
 		_targetsToKill = TargetsToKill - 1;
-		_score += 200; //would be better in a parameter
 	}
 
 	public void StartGame()
@@ -62,6 +68,7 @@ public class GameManager : MonoBehaviour
 		StartCoroutine(TargetSpawning());
 		Cursor.lockState = CursorLockMode.Locked;
 		GameStarted = true;
+		_animationController.enabled = true;
 	}
 
 	private IEnumerator TargetSpawning()
@@ -81,7 +88,14 @@ public class GameManager : MonoBehaviour
 			}
 		}
 		
-		yield return new WaitForSeconds(3);
+		SaveAndReload();
+	}
+
+	private void SaveAndReload()
+	{
+
+		File.WriteAllText(Application.dataPath + "/Technical Test/Example Data/PlayerStatistics.json", 
+			JsonUtility.ToJson(new Stats(new PlayerStatistics(_score, Player.Accracy, Player.CriticalAccuracy)))); // would be better as a field or dynamic parameter
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 

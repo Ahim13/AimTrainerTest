@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 public class Target : MonoBehaviour
@@ -26,6 +27,7 @@ public class Target : MonoBehaviour
 		_nextRandomPosition = GameManager.Instance.GetRandomPointInsideMap();
 		var position = GameManager.Instance.Player.transform.position;
 		_playerPos = new Vector3(position.x, transform.position.y, position.z);
+		_speed = Random.Range(1, 4);
 	}
 
 	private void Update()
@@ -35,6 +37,6 @@ public class Target : MonoBehaviour
 		float step =  _speed * Time.deltaTime;
 		transform.position = Vector3.MoveTowards(transform.position, _nextRandomPosition, step);
 		if(Vector3.Distance(transform.position, _nextRandomPosition) < 0.01f)
-			_nextRandomPosition = GameManager.Instance.GetRandomPointInsideMap();
+			_nextRandomPosition = GameManager.Instance.GetRandomPointInsideMap(); //Move to a random point inside the circle area - if there are obstacles this needs rework, navmesh is an option
 	}
 }

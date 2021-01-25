@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
 	private bool _isLoaded;
 
 	public float CurrentClip => _currentClip;
-
 	public float Accracy => (_normalShots + _critricalShots) / _allShots;
 	public float CriticalAccuracy => _critricalShots / _allShots;
 
@@ -94,9 +93,15 @@ public class PlayerController : MonoBehaviour
 				var targetPoint = hit.transform.GetComponent<TargetPoint>();
 				targetPoint.Hit(_dmg);
 				if (targetPoint.Type == TargetPointType.Normal)
+				{
 					++_normalShots;
+					GameManager.Instance.Score += 20;
+				}
 				else if (targetPoint.Type == TargetPointType.Critical)
+				{
 					++_critricalShots;
+					GameManager.Instance.Score += 40;
+				}
 			}
 		}
 
