@@ -3082,7 +3082,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93dea102e40cbb348a031bd71aab248a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerController: {fileID: 615805822}
   _statistics: {fileID: 11400000, guid: d1d89e52ebc41db43a7f818890c4eb3a, type: 2}
   _clip: {fileID: 2132020948}
   _maxTargetNumber: {fileID: 1377184638}
