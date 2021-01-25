@@ -7,8 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(GameManager))]
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private PlayerController _playerController;
-    [SerializeField] private Statistics _statistics;
+	[SerializeField] private Statistics _statistics;
     [SerializeField] private TextMeshProUGUI _clip;
     [SerializeField] private TextMeshProUGUI _maxTargetNumber;
     [SerializeField] private TextMeshProUGUI _currentTargetNumber;

@@ -15,11 +15,11 @@ MonoBehaviour:
   TargetsToKill: 1
   InitialTargetsToKill: 2
   Score: 0
-  CurrentClip: 49
-  AllShots: 1
+  CurrentClip: 28
+  AllShots: 2
   CritricalShots: 0
   NormalShots: 0
   Dmg: 5
   FireRate: 600
-  ClipSize: 50
-  GameStarted: 0
+  ClipSize: 30
+  GameStarted: 1

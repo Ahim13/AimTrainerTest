@@ -37,17 +37,13 @@ public class GameManager : MonoBehaviour
 	{
 		string json = File.ReadAllText(Application.dataPath + "/Technical Test/Example Data/ExampleParameters.json"); // would be better as a field or dynamic parameter
 		parameters = JsonUtility.FromJson<Parameters>(json);
+		
 		_statistics.InitialTargetsToKill = parameters.GameParameters.targetsToKill;
 		_statistics.TargetsToKill = parameters.GameParameters.targetsToKill;
 		_statistics.FireRate = parameters.WeaponParameters.rateOfFire;
-		_statistics.ClipSize = parameters.WeaponParameters.damage;
+		_statistics.ClipSize = parameters.WeaponParameters.clipSize;
 		_statistics.Dmg = parameters.WeaponParameters.damage;
 		_statistics.Dmg /= _statistics.FireRate / 60f;
-	}
-
-	public void Setup()
-	{
-
 	}
 
 	public void TargetKilled()
