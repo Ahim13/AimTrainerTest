@@ -24,7 +24,8 @@ public class Target : MonoBehaviour
 	private void Start()
 	{
 		_nextRandomPosition = GameManager.Instance.GetRandomPointInsideMap();
-		_playerPos = new Vector3(GameManager.Instance.Player.position.x, transform.position.y, GameManager.Instance.Player.position.z);
+		var position = GameManager.Instance.Player.transform.position;
+		_playerPos = new Vector3(position.x, transform.position.y, position.z);
 	}
 
 	private void Update()

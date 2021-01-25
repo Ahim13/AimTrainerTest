@@ -11,12 +11,16 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private LayerMask _layermask;
 
 	[SerializeField] private float _mSensitivity = 10f;
-	[SerializeField] private float _dmg;
 	[SerializeField] private float _range;
+	
+	[SerializeField] private float _dmg;
 	[SerializeField] private float _fireRate;
 	[SerializeField] private float _clipSize;
 
-
+	private float _allShots = 0;
+	private float _critricalShots = 0;
+	private float _normalShots = 0;
+	
 	private float _xRotation;
 	private float _timeToFire;
 	private float _currentClip;
@@ -24,23 +28,33 @@ public class PlayerController : MonoBehaviour
 
 	public float CurrentClip => _currentClip;
 
+	public float Accracy => (_normalShots + _critricalShots) / _allShots;
+	public float CriticalAccuracy => _critricalShots / _allShots;
+
 	private void Awake()
 	{
-		_currentClip = _clipSize;
 		_isLoaded = true;
+	}
+
+	public void SetUp(float fireRate, float clipSize, float damage)
+	{
+		_fireRate = fireRate;
+		_clipSize = clipSize;
+		_dmg = damage;
 		_dmg /= _fireRate / 60f;
+		_currentClip = _clipSize;
 	}
 
 	void Update()
 	{
-		if(!GameManager.GameStarted)
+		if (!GameManager.GameStarted)
 			return;
-		
+
 		CameraMovement();
 		if (_animationController.IsReady)
 		{
 			Shooting();
-			if(Input.GetKeyDown(KeyCode.R))
+			if (Input.GetKeyDown(KeyCode.R))
 				Reload();
 		}
 	}
@@ -72,14 +86,20 @@ public class PlayerController : MonoBehaviour
 	{
 		_animationController.Fire();
 		RaycastHit hit;
+		++_allShots;
 		if (Physics.Raycast(_camera.position, _camera.forward, out hit, _range, _layermask))
 		{
-			Debug.Log(hit.transform.name);
 			if (hit.transform.CompareTag("Target"))
 			{
-				hit.transform.GetComponent<TargetPoint>().Hit(_dmg);
+				var targetPoint = hit.transform.GetComponent<TargetPoint>();
+				targetPoint.Hit(_dmg);
+				if (targetPoint.Type == TargetPointType.Normal)
+					++_normalShots;
+				else if (targetPoint.Type == TargetPointType.Critical)
+					++_critricalShots;
 			}
 		}
+
 		_currentClip = CurrentClip - 1;
 		if (CurrentClip == 0)
 		{

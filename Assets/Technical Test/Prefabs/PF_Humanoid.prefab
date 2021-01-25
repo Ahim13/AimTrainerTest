@@ -108,6 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dmgMultiplier: 1.2
   _target: {fileID: 467984080782929168}
+  _type: 0
 --- !u!1 &6492822366711821912
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,6 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dmgMultiplier: 1
   _target: {fileID: 467984080782929168}
+  _type: 0
 --- !u!1 &6909464440345417572
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,6 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 150
+  _speed: 3
 --- !u!1 &7832884184092948520
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,3 +372,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dmgMultiplier: 1.5
   _target: {fileID: 467984080782929168}
+  _type: 1

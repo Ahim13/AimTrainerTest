@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _currentTargetNumber;
     [SerializeField] private TextMeshProUGUI _accuracy;
     [SerializeField] private TextMeshProUGUI _criticalAccuracy;
+    [SerializeField] private TextMeshProUGUI _score;
 
     private void Start()
     {
@@ -23,5 +24,8 @@ public class UIManager : MonoBehaviour
     {
        _clip.text = _playerController.CurrentClip + "/∞";
        _currentTargetNumber.text = GameManager.Instance.TargetsToKill.ToString();
+       _accuracy.text = "Accuracy: " + GameManager.Instance.Player.Accracy.ToString("P1");
+       _criticalAccuracy.text = "Critical accuracy: " +  GameManager.Instance.Player.CriticalAccuracy.ToString("P1");
+       _score.text = "Score: " +  GameManager.Instance.Score;
     }
 }

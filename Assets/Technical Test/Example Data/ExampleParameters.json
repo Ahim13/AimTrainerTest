@@ -1,13 +1,13 @@
 {
-  "weaponParameters": {
+  "WeaponParameters": {
     "rateOfFire": 600,
     "clipSize": 30,
     "damage": 50
   },
-  "gameParameters": {
+  "GameParameters": {
     "targetsToKill": 30
   },
-  "targetParameters": {
+  "TargetParameters": {
     "health": 150
   }
 }
