@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
 	[SerializeField] private AnimationController _animationController;
 	[SerializeField] private Transform _player;
@@ -22,37 +22,38 @@ public class CharacterController : MonoBehaviour
 	private float _currentClip;
 	private bool _isLoaded;
 
+	public float CurrentClip => _currentClip;
+
 	private void Awake()
 	{
-		Cursor.lockState = CursorLockMode.Locked;
 		_currentClip = _clipSize;
 		_isLoaded = true;
+		_dmg /= _fireRate / 60f;
 	}
 
 	void Update()
 	{
+		if(!GameManager.GameStarted)
+			return;
+		
 		CameraMovement();
-		Shooting();
+		if (_animationController.IsReady)
+		{
+			Shooting();
+			if(Input.GetKeyDown(KeyCode.R))
+				Reload();
+		}
+	}
+
+	private void Reload()
+	{
+		_isLoaded = false;
+		_animationController.Reload();
 	}
 
 	private void Shooting()
 	{
-		if (!_animationController.IsReady)
-			return;
-
-		// if (Input.GetMouseButton(0) && Time.time >= _timeToFire)
-		// {
-		// 	//_characterAnimator.SetTrigger("Fire");
-		// 	_timeToFire = _fireRate;
-		// 	Debug.Log("FIREDDD!");
-		// 	RaycastHit hit;
-		// 	if (Physics.Raycast(_camera.position, _camera.forward, out hit, _range))
-		// 	{
-		// 		Debug.Log(hit.transform.name);
-		// 	}
-		// }
-
-		if (Input.GetMouseButton(0))
+		if (Input.GetMouseButton(0) && _isLoaded)
 		{
 			if (Input.GetMouseButtonDown(0))
 			{
@@ -61,7 +62,7 @@ public class CharacterController : MonoBehaviour
 
 			while (_timeToFire <= Time.time)
 			{
-				_timeToFire += 1f / _fireRate;
+				_timeToFire += 60f / _fireRate;
 				Shoot();
 			}
 		}
@@ -69,12 +70,6 @@ public class CharacterController : MonoBehaviour
 
 	private void Shoot()
 	{
-		if (_currentClip == 0)
-		{
-			_animationController.Reload();
-			return;
-		}
-
 		_animationController.Fire();
 		RaycastHit hit;
 		if (Physics.Raycast(_camera.position, _camera.forward, out hit, _range, _layermask))
@@ -85,11 +80,11 @@ public class CharacterController : MonoBehaviour
 				hit.transform.GetComponent<TargetPoint>().Hit(_dmg);
 			}
 		}
-
-		--_currentClip;
-		if (_currentClip == 0)
+		_currentClip = CurrentClip - 1;
+		if (CurrentClip == 0)
 		{
 			_isLoaded = false;
+			_animationController.Reload();
 		}
 	}
 
